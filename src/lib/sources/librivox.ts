@@ -61,9 +61,25 @@ async function retryOp<T>(fn: () => Promise<T>): Promise<T> {
 
 /** Cached invoke function from Tauri IPC (avoids re-importing on every call). */
 let _invoke: ((cmd: string, args?: Record<string, unknown>) => Promise<unknown>) | undefined;
-async function getInvoke() {
-	if (!_invoke) _invoke = (await import('@tauri-apps/api/core')).invoke;
-	return _invoke!;
+async function getInvoke(): Promise<
+	(cmd: string, args?: Record<string, unknown>) => Promise<unknown>
+> {
+	if (!_invoke) {
+		try {
+			_invoke = (await import('@tauri-apps/api/core')).invoke;
+		} catch (e) {
+			// Running outside Tauri (e.g., in tests or browser preview).
+			// Return a fallback that gives a clear error instead of a cryptic
+			// "invoke is not a function".
+			_invoke = async () => {
+				throw new Error(
+					`@tauri-apps/api/core not available (${e}). ` +
+						'This API can only be called from within a Tauri app.',
+				);
+			};
+		}
+	}
+	return _invoke;
 }
 
 /** Fetch JSON via the Tauri HTTP proxy (avoids browser CORS restrictions). */
