@@ -139,6 +139,7 @@ export async function getBook(id: string): Promise<LibrivoxBook> {
 	return retryOp(async () => {
 		const data = await fetchJson<{ books: LibrivoxBook[] }>(url, {
 			extended: '1',
+			coverart: '1',
 			format: 'json',
 		});
 		const book = data.books?.[0];

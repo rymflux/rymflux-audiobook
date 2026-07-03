@@ -77,7 +77,7 @@
 					></div>
 				</div>
 				<button
-					onclick={() => onPlay?.(Math.floor(savedProgress / 1000))}
+					onclick={() => onPlay?.()}
 					class="text-xs text-blue-400 hover:underline"
 				>
 					Resume
