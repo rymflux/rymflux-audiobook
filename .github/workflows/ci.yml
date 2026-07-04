@@ -42,7 +42,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
 
@@ -77,7 +77,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
 
@@ -112,13 +112,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
 
       - name: Install dependencies
         working-directory: rymflux-audiobook
         run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install chromium
 
       - name: Run unit tests
         working-directory: rymflux-audiobook
