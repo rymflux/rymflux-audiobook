@@ -29,8 +29,8 @@ export const audiobookDomain: DomainManifest = {
 	},
 
 	async search(
-		query,
-		searchType,
+		query: string,
+		searchType: string,
 		limit = 20,
 		offset = 0
 	): Promise<import('@rymflux/shell').DomainItem[]> {
@@ -42,7 +42,7 @@ export const audiobookDomain: DomainManifest = {
 		return books.map((b) => bookToDomainItem(b, DOMAIN_ID, addedAt));
 	},
 
-	async getDetail(id) {
+	async getDetail(id: string) {
 		const rawId = stripPrefix(id);
 		try {
 			const book = await getBook(rawId);
@@ -52,11 +52,11 @@ export const audiobookDomain: DomainManifest = {
 		}
 	},
 
-	resolveSource(listenUrl, durationMs): AudioSource {
+	resolveSource(listenUrl: string, durationMs: number): AudioSource {
 		return { uri: listenUrl, duration_ms: durationMs, mime_type: 'audio/mpeg' };
 	},
 
-	async buildLibraryItem(catalogId) {
+	async buildLibraryItem(catalogId: string) {
 		const rawId = stripPrefix(catalogId);
 		const book = await getBook(rawId);
 		return bookToContentItem(book, DOMAIN_ID);

@@ -11,6 +11,9 @@
 # checked out into a rymflux-shell subdirectory inside the audiobook clone.
 # This way file:../rymflux-shell resolves correctly.
 #
+# The shell needs its types built (pnpm package) before the audiobook's
+# svelte-check can resolve @rymflux/shell type declarations.
+#
 # Total wall time target: under 3 minutes.
 
 name: CI
@@ -49,6 +52,15 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
+
+      # Build shell types first so @rymflux/shell declarations are available
+      - name: Install shell dependencies
+        working-directory: rymflux-shell
+        run: pnpm install --frozen-lockfile
+
+      - name: Build shell types
+        working-directory: rymflux-shell
+        run: pnpm prepack
 
       - name: Install dependencies
         working-directory: rymflux-audiobook
