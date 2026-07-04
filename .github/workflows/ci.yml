@@ -33,6 +33,7 @@ jobs:
         with:
           repository: rymflux/rymflux-shell
           path: rymflux-shell
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -64,6 +65,7 @@ jobs:
         with:
           repository: rymflux/rymflux-shell
           path: rymflux-shell
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -95,6 +97,7 @@ jobs:
         with:
           repository: rymflux/rymflux-shell
           path: rymflux-shell
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
