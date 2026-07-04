@@ -1,0 +1,125 @@
+# CI for rymflux-audiobook
+#
+# Runs on push/PR to main. Three parallel jobs:
+#   check — svelte-check (type safety gate)
+#   lint  — prettier + eslint (style + code quality gate)
+#   test  — vitest run (unit test gate)
+#
+# rymflux-audiobook depends on rymflux-shell via file:../rymflux-shell,
+# so the shell repo is checked out as a sibling directory.
+#
+# Total wall time target: under 3 minutes.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    name: svelte-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: rymflux-audiobook
+
+      - name: Checkout rymflux-shell (sibling for file: dep)
+        uses: actions/checkout@v4
+        with:
+          repository: rymflux/rymflux-shell
+          path: rymflux-shell
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        working-directory: rymflux-audiobook
+        run: pnpm install
+
+      - name: Type check (svelte-check)
+        working-directory: rymflux-audiobook
+        run: pnpm check
+
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: rymflux-audiobook
+
+      - name: Checkout rymflux-shell (sibling for file: dep)
+        uses: actions/checkout@v4
+        with:
+          repository: rymflux/rymflux-shell
+          path: rymflux-shell
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        working-directory: rymflux-audiobook
+        run: pnpm install
+
+      - name: Style & lint check
+        working-directory: rymflux-audiobook
+        run: pnpm lint
+
+  test:
+    name: vitest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: rymflux-audiobook
+
+      - name: Checkout rymflux-shell (sibling for file: dep)
+        uses: actions/checkout@v4
+        with:
+          repository: rymflux/rymflux-shell
+          path: rymflux-shell
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
+
+      - name: Install dependencies
+        working-directory: rymflux-audiobook
+        run: pnpm install
+
+      - name: Run unit tests
+        working-directory: rymflux-audiobook
+        run: pnpm test
