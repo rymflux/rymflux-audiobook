@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { SeekBar, PlaybackControls, TimeDisplay, VolumeSlider, CoverImage, getPlayerState } from '@rymflux/shell';
+	import {
+		SeekBar,
+		PlaybackControls,
+		TimeDisplay,
+		VolumeSlider,
+		CoverImage,
+		getPlayerState
+	} from '@rymflux/shell';
 	import { onMount } from 'svelte';
 	import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 
@@ -10,7 +17,7 @@
 		onSkipForward,
 		onSpeedChange,
 		onVolumeChange,
-		onChapterClick,
+		onChapterClick
 	}: {
 		onPlayPause?: () => void;
 		onSeek?: (ms: number) => void;
@@ -29,11 +36,14 @@
 	function startSleepTimer(minutes: number) {
 		sleepOption = minutes as typeof sleepOption;
 		clearTimeout(timerHandle);
-		timerHandle = setTimeout(() => {
-			onPlayPause?.();
-			sleepOption = 'none';
-			timerHandle = undefined;
-		}, minutes * 60 * 1000);
+		timerHandle = setTimeout(
+			() => {
+				onPlayPause?.();
+				sleepOption = 'none';
+				timerHandle = undefined;
+			},
+			minutes * 60 * 1000
+		);
 	}
 
 	function startChapterSleep() {
@@ -100,17 +110,18 @@
 	<!-- Large cover art + title -->
 	<div class="text-center">
 		<div class="w-48 h-48 mx-auto rounded-2xl overflow-hidden bg-white/5 mb-4">
-			<CoverImage url={playerState.currentCoverUrl} title={playerState.currentTitle} class="w-full h-full object-cover" />
+			<CoverImage
+				url={playerState.currentCoverUrl}
+				title={playerState.currentTitle}
+				class="w-full h-full object-cover"
+			/>
 		</div>
 		<h2 class="text-xl font-semibold truncate">{playerState.currentTitle || 'No title'}</h2>
 	</div>
 
 	<!-- Seek bar -->
 	<div class="space-y-1">
-		<SeekBar
-			progress={playerState.progressFraction}
-			onSeek={handleSeekFraction}
-		/>
+		<SeekBar progress={playerState.progressFraction} onSeek={handleSeekFraction} />
 		<div class="flex justify-between text-xs text-gray-500">
 			<TimeDisplay seconds={Math.floor(playerState.positionMs / 1000)} />
 			<TimeDisplay seconds={Math.floor(playerState.remainingMs / 1000)} />
@@ -163,15 +174,22 @@
 				>
 					60m
 				</button>
-				<button onclick={startChapterSleep} class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 transition-colors text-xs">
+				<button
+					onclick={startChapterSleep}
+					class="px-2 py-1 rounded bg-white/10 hover:bg-white/20 transition-colors text-xs"
+				>
 					End of chapter
 				</button>
 			{:else if sleepOption === 'chapter'}
 				<span class="text-blue-400 text-xs">At end of chapter</span>
-				<button onclick={cancelSleepTimer} class="text-xs text-gray-500 hover:text-white underline">Cancel</button>
+				<button onclick={cancelSleepTimer} class="text-xs text-gray-500 hover:text-white underline"
+					>Cancel</button
+				>
 			{:else}
 				<span class="text-blue-400 text-xs">{sleepOption} min</span>
-				<button onclick={cancelSleepTimer} class="text-xs text-gray-500 hover:text-white underline">Cancel</button>
+				<button onclick={cancelSleepTimer} class="text-xs text-gray-500 hover:text-white underline"
+					>Cancel</button
+				>
 			{/if}
 		</div>
 	</div>
@@ -184,10 +202,16 @@
 				{#each playerState.currentSections as ch, i (ch.id)}
 					<button
 						onclick={() => handleChapterClick(i)}
-						class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors text-left {i === playerState.currentChapterIndex ? 'bg-blue-600/10 border border-blue-500/30' : ''}"
+						class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors text-left {i ===
+						playerState.currentChapterIndex
+							? 'bg-blue-600/10 border border-blue-500/30'
+							: ''}"
 					>
 						<span
-							class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium shrink-0 {i === playerState.currentChapterIndex ? 'bg-blue-600 text-white' : 'bg-white/10'}"
+							class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-medium shrink-0 {i ===
+							playerState.currentChapterIndex
+								? 'bg-blue-600 text-white'
+								: 'bg-white/10'}"
 						>
 							{i + 1}
 						</span>
@@ -195,7 +219,9 @@
 							<p class="text-sm truncate">{ch.title || `Chapter ${i + 1}`}</p>
 						</div>
 						{#if ch.playtime_secs != null}
-							<span class="text-xs text-gray-500 shrink-0"><TimeDisplay seconds={ch.playtime_secs} /></span>
+							<span class="text-xs text-gray-500 shrink-0"
+								><TimeDisplay seconds={ch.playtime_secs} /></span
+							>
 						{/if}
 					</button>
 				{/each}

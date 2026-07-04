@@ -74,7 +74,7 @@ async function getInvoke(): Promise<
 			_invoke = async () => {
 				throw new Error(
 					`@tauri-apps/api/core not available (${e}). ` +
-						'This API can only be called from within a Tauri app.',
+						'This API can only be called from within a Tauri app.'
 				);
 			};
 		}
@@ -91,7 +91,7 @@ async function fetchJson<T>(url: string, params?: Record<string, string>): Promi
 			urlObj.searchParams.set(k, v);
 		}
 	}
-	const text = await invoke<string>('http_get', { url: urlObj.toString() });
+	const text = (await invoke('http_get', { url: urlObj.toString() })) as string;
 	return JSON.parse(text) as T;
 }
 
@@ -101,7 +101,7 @@ async function fetchJson<T>(url: string, params?: Record<string, string>): Promi
 export async function searchByTitle(
 	query: string,
 	limit = 20,
-	offset = 0,
+	offset = 0
 ): Promise<LibrivoxBook[]> {
 	return retryOp(async () => {
 		const data = await fetchJson<{ books: LibrivoxBook[] }>(BASE_URL, {
@@ -109,7 +109,7 @@ export async function searchByTitle(
 			format: 'json',
 			limit: String(limit),
 			offset: String(offset),
-			coverart: '1',
+			coverart: '1'
 		});
 		return data.books ?? [];
 	});
@@ -119,7 +119,7 @@ export async function searchByTitle(
 export async function searchByAuthor(
 	author: string,
 	limit = 20,
-	offset = 0,
+	offset = 0
 ): Promise<LibrivoxBook[]> {
 	return retryOp(async () => {
 		const data = await fetchJson<{ books: LibrivoxBook[] }>(BASE_URL, {
@@ -127,7 +127,7 @@ export async function searchByAuthor(
 			format: 'json',
 			limit: String(limit),
 			offset: String(offset),
-			coverart: '1',
+			coverart: '1'
 		});
 		return data.books ?? [];
 	});
@@ -140,7 +140,7 @@ export async function getBook(id: string): Promise<LibrivoxBook> {
 		const data = await fetchJson<{ books: LibrivoxBook[] }>(url, {
 			extended: '1',
 			coverart: '1',
-			format: 'json',
+			format: 'json'
 		});
 		const book = data.books?.[0];
 		if (!book) throw new Error('no book found in response');
@@ -167,7 +167,7 @@ function getAuthorName(authors: LibrivoxAuthor[]): string {
 export function bookToDomainItem(
 	book: LibrivoxBook,
 	domainId: string,
-	addedAt: string,
+	addedAt: string
 ): import('@rymflux/shell').DomainItem {
 	return {
 		content_id: `librivox_${book.id}`,
@@ -180,7 +180,7 @@ export function bookToDomainItem(
 		cover_url: book.coverart_jpg ?? null,
 		added_at: addedAt,
 		language: book.language ?? null,
-		num_sections: book.num_sections != null ? Number(book.num_sections) : null,
+		num_sections: book.num_sections != null ? Number(book.num_sections) : null
 	};
 }
 
@@ -194,11 +194,11 @@ export function bookToCatalogDetail(book: LibrivoxBook): import('@rymflux/shell'
 			title: book.title,
 			author,
 			description: book.description,
-			total_time_secs: book.totaltimesecs,
+			total_time_secs: book.totaltimesecs ?? null,
 			num_sections: numSections,
 			cover_url: book.coverart_jpg ?? null,
 			language: book.language ?? null,
-			url_librivox: book.url_librivox ?? null,
+			url_librivox: book.url_librivox ?? null
 		},
 		sections:
 			book.sections?.map((s) => ({
@@ -206,15 +206,15 @@ export function bookToCatalogDetail(book: LibrivoxBook): import('@rymflux/shell'
 				section_number: Number(s.section_number),
 				title: s.title,
 				listen_url: s.listen_url,
-				playtime_secs: s.playtime != null ? Number(s.playtime) : null,
-			})) ?? [],
+				playtime_secs: s.playtime != null ? Number(s.playtime) : null
+			})) ?? []
 	};
 }
 
 /** Convert a LibrivoxBook to a ContentItem for library storage. */
 export function bookToContentItem(
 	book: LibrivoxBook,
-	domainId: string,
+	domainId: string
 ): import('@rymflux/shell').ContentItem {
 	const author = getAuthorName(book.authors);
 	return {
@@ -229,9 +229,9 @@ export function bookToContentItem(
 			librivox_id: book.id,
 			total_time_secs: book.totaltimesecs,
 			num_sections: book.num_sections,
-			cover_url: book.coverart_jpg ?? null,
+			cover_url: book.coverart_jpg ?? null
 		},
 		content_hash: '',
-		added_at: Math.floor(Date.now() / 1000),
+		added_at: Math.floor(Date.now() / 1000)
 	};
 }

@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	bookToDomainItem,
-	bookToCatalogDetail,
-	bookToContentItem,
-	getStreamUrl,
-} from './librivox';
+import { bookToDomainItem, bookToCatalogDetail, bookToContentItem, getStreamUrl } from './librivox';
 import type { LibrivoxBook } from './librivox';
 
 function makeMockBook(overrides: Partial<LibrivoxBook> = {}): LibrivoxBook {
@@ -21,8 +16,8 @@ function makeMockBook(overrides: Partial<LibrivoxBook> = {}): LibrivoxBook {
 				listen_url: 'https://www.librivox.org/abc/123.mp3',
 				playtime: '1800',
 				language: 'English',
-				readers: [{ reader_id: 'r1', display_name: 'Reader One' }],
-			},
+				readers: [{ reader_id: 'r1', display_name: 'Reader One' }]
+			}
 		],
 		language: 'English',
 		copyright_year: '2020',
@@ -34,7 +29,7 @@ function makeMockBook(overrides: Partial<LibrivoxBook> = {}): LibrivoxBook {
 		coverart_thumbnail: 'https://archive.org/thumb/123',
 		coverart_jpg: 'https://archive.org/covers/123.jpg',
 		url_text_source: null,
-		...overrides,
+		...overrides
 	};
 }
 
@@ -56,7 +51,7 @@ describe('librivox adapter — conversion helpers', () => {
 		const book = makeMockBook({
 			totaltimesecs: null,
 			coverart_jpg: null,
-			num_sections: null,
+			num_sections: null
 		});
 		const item = bookToDomainItem(book, 'librivox', '2026-07-04T00:00:00Z');
 
@@ -93,11 +88,11 @@ describe('librivox adapter — conversion helpers', () => {
 		expect(item.id).toBe('librivox_12345');
 		expect(item.domain_id).toBe('librivox');
 		expect(item.source_uri).toBe('https://librivox.org/123');
-		expect(item.metadata_json.title).toBe('The Adventures of Sherlock Holmes');
-		expect(item.metadata_json.author).toBe('Arthur Conan Doyle');
-		expect(item.metadata_json.librivox_id).toBe('12345');
-		expect(item.metadata_json.total_time_secs).toBe(1800);
-		expect(item.metadata_json.num_sections).toBe('1');
+		expect(item.metadata_json!.title).toBe('The Adventures of Sherlock Holmes');
+		expect(item.metadata_json!.author).toBe('Arthur Conan Doyle');
+		expect(item.metadata_json!.librivox_id).toBe('12345');
+		expect(item.metadata_json!.total_time_secs).toBe(1800);
+		expect(item.metadata_json!.num_sections).toBe('1');
 	});
 
 	it('getStreamUrl returns the listen_url from a section', () => {
@@ -110,8 +105,8 @@ describe('librivox adapter — conversion helpers', () => {
 		const book = makeMockBook({
 			authors: [
 				{ id: '1', first_name: 'Arthur', last_name: 'Conan Doyle' },
-				{ id: '2', first_name: 'John', last_name: 'Doe' },
-			],
+				{ id: '2', first_name: 'John', last_name: 'Doe' }
+			]
 		});
 		const item = bookToDomainItem(book, 'librivox', '2026-07-04T00:00:00Z');
 		expect(item.author).toBe('Arthur Conan Doyle, John Doe');

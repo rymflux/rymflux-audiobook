@@ -8,7 +8,7 @@ import {
 	getBook,
 	bookToDomainItem,
 	bookToCatalogDetail,
-	bookToContentItem,
+	bookToContentItem
 } from './sources/librivox';
 
 const DOMAIN_ID = 'audiobook';
@@ -25,10 +25,15 @@ export const audiobookDomain: DomainManifest = {
 	views: {
 		library: LibraryView,
 		detail: DetailView,
-		player: NowPlayingView,
+		player: NowPlayingView
 	},
 
-	async search(query, searchType, limit = 20, offset = 0): Promise<import('@rymflux/shell').DomainItem[]> {
+	async search(
+		query,
+		searchType,
+		limit = 20,
+		offset = 0
+	): Promise<import('@rymflux/shell').DomainItem[]> {
 		const useAuthor = searchType === 'author';
 		const books = useAuthor
 			? await searchByAuthor(query, limit, offset)
@@ -55,5 +60,5 @@ export const audiobookDomain: DomainManifest = {
 		const rawId = stripPrefix(catalogId);
 		const book = await getBook(rawId);
 		return bookToContentItem(book, DOMAIN_ID);
-	},
+	}
 };
