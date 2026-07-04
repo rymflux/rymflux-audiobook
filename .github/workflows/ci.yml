@@ -28,7 +28,7 @@ jobs:
         with:
           path: rymflux-audiobook
 
-      - name: Checkout rymflux-shell (sibling for file: dep)
+      - name: 'Checkout rymflux-shell (sibling for file: dep)'
         uses: actions/checkout@v4
         with:
           repository: rymflux/rymflux-shell
@@ -63,7 +63,7 @@ jobs:
         with:
           path: rymflux-audiobook
 
-      - name: Checkout rymflux-shell (sibling for file: dep)
+      - name: 'Checkout rymflux-shell (sibling for file: dep)'
         uses: actions/checkout@v4
         with:
           repository: rymflux/rymflux-shell
@@ -98,7 +98,7 @@ jobs:
         with:
           path: rymflux-audiobook
 
-      - name: Checkout rymflux-shell (sibling for file: dep)
+      - name: 'Checkout rymflux-shell (sibling for file: dep)'
         uses: actions/checkout@v4
         with:
           repository: rymflux/rymflux-shell
