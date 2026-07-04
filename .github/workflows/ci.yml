@@ -7,6 +7,8 @@
 #
 # rymflux-audiobook depends on rymflux-shell via file:../rymflux-shell,
 # so the shell repo is checked out as a sibling directory.
+# The main repo uses the default checkout (no path:) so that
+# file:../rymflux-shell resolves correctly from the workspace root.
 #
 # Total wall time target: under 3 minutes.
 
@@ -25,8 +27,6 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: rymflux-audiobook
 
       - name: 'Checkout rymflux-shell (sibling for file: dep)'
         uses: actions/checkout@v4
@@ -44,14 +44,12 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
+          cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install dependencies
-        working-directory: rymflux-audiobook
         run: pnpm install --frozen-lockfile
 
       - name: Type check (svelte-check)
-        working-directory: rymflux-audiobook
         run: pnpm check
 
   lint:
@@ -60,8 +58,6 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: rymflux-audiobook
 
       - name: 'Checkout rymflux-shell (sibling for file: dep)'
         uses: actions/checkout@v4
@@ -79,14 +75,12 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
+          cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install dependencies
-        working-directory: rymflux-audiobook
         run: pnpm install --frozen-lockfile
 
       - name: Style & lint check
-        working-directory: rymflux-audiobook
         run: pnpm lint
 
   test:
@@ -95,8 +89,6 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: rymflux-audiobook
 
       - name: 'Checkout rymflux-shell (sibling for file: dep)'
         uses: actions/checkout@v4
@@ -114,15 +106,13 @@ jobs:
         with:
           node-version: '22'
           cache: 'pnpm'
-          cache-dependency-path: 'rymflux-audiobook/pnpm-lock.yaml'
+          cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Install dependencies
-        working-directory: rymflux-audiobook
         run: pnpm install --frozen-lockfile
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium
 
       - name: Run unit tests
-        working-directory: rymflux-audiobook
         run: pnpm test
