@@ -3,6 +3,8 @@ import { defineConfig } from 'vitest/config';
 import { playwright } from '@vitest/browser-playwright';
 import adapter from '@sveltejs/adapter-auto';
 import { sveltekit } from '@sveltejs/kit/vite';
+// @ts-expect-error type error without @types/node package
+import path from 'node:path';
 
 export default defineConfig({
 	plugins: [
@@ -20,6 +22,11 @@ export default defineConfig({
 			adapter: adapter()
 		})
 	],
+	resolve: {
+		alias: {
+			'@rymflux/shell': path.resolve('../rymflux-desktop/src/lib'),
+		},
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
